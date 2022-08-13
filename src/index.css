@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +9,55 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+   /*Color Variable Starts*/
+   --cd-clr-1:#ECF4FA;
+   --cd-clr-1-txt:#000000;
+   --cd-clr-2:#C6DFF0;
+   --cd-clr-2-txt:#000000;
+   --cd-clr-3:#A0C8E6;
+   --cd-clr-3-txt:#000000;
+   --cd-clr-4:#7CB3DC;
+   --cd-clr-4-txt:#000000;
+   --cd-clr-5:#5A9DD2;
+   --cd-clr-5-txt:#000000;
+   --cd-clr-6:#4384B8;
+   --cd-clr-6-txt:#000000;
+   --cd-clr-7:#34678F;
+   --cd-clr-7-txt:#ffffff;
+   --cd-clr-8:#254A67;
+   --cd-clr-8-txt:#ffffff;
+   --cd-clr-9:#152C3E;
+   --cd-clr-9-txt:#ffffff;
+   --cd-clr-10:#060E14;
+   --cd-clr-10-txt:#ffffff;
+   --cd--clr-white: #ffffff;
+   --cd--clr-black: #000000;
+   /*Color Variable Ends*/
+   --cd-clr-sec-1: #FF8F00;
+   --cd-clr-sec-1-txt: #000000;
+   /*Space Variable Starts*/
+   --cd-space-1: 4px;
+   --cd-space-2: 8px;
+   --cd-space-3: 12px;
+   --cd-space-4: 16px;
+   --cd-space-5: 20px;
+   --cd-space-6: 24px;
+   --cd-space-7: 32px;
+   --cd-space-8: 40px;
+   --cd-space-9: 48px;
+   --cd-space-10: 56px;
+   /*Space Variable Ends*/
+   /*Font Size Variable Starts*/
+   --cd-font-1: 10px;
+   --cd-font-2: 12px;
+   --cd-font-3: 14px;
+   --cd-font-4: 18px;
+   --cd-font-5: 24px;
+   --cd-font-6: 32px;
+   --cd-font-7: 48px;
+   --cd-font-8: 56px;
+   /*Font Size Variable Ends*/
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+
