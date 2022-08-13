@@ -3,7 +3,7 @@ import type { IMovie } from '../../models/movie-mdl';
 import React from 'react';
 import './app.css';
 
-import MovieCard from '../movie-card/movie-card';
+import MovieCardList from '../movie-card-list/movie-card-list';
 
 
 //-----temp
@@ -31,13 +31,33 @@ const sample: IMovie = {
   budget: { low: 30000000, high: 0 },
   revenue: { low: 373554033, high: 0 },
 };
+
+const sampleArr = [
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+  JSON.parse(JSON.stringify(sample)),
+];
+
+let i = 0;
+for (let sample of sampleArr) {
+  i = i + 1;
+  sample.movieId = i + '';
+}
+
+console.log(sampleArr);
 //---------
 
 
 function App() {
   return (
-    <div >
-      <MovieCard {...sample}></MovieCard>
+    <div className="movie-main-container">
+      <MovieCardList data={sampleArr}></MovieCardList>
     </div>
   );
 }

@@ -1,0 +1,9 @@
+.movie-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: var(--cd-space-3) var(--cd-space-3) 0 var(--cd-space-3);
+    background-color: var(--cd-clr-1);
+    color: var(--cd-clr-1-txt);
+    overflow-y: auto;
+}
