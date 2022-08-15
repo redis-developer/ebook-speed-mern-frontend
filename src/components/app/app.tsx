@@ -1,9 +1,10 @@
-import type { IMovie } from '../../models/movie-mdl';
+import type { IMovie, IMasters } from '../../models/movie-mdl';
 
 import React from 'react';
 import './app.css';
 
 import MovieCardList from '../movie-card-list/movie-card-list';
+import MoviePopup from '../movie-popup/movie-popup';
 
 
 //-----temp
@@ -50,7 +51,74 @@ for (let sample of sampleArr) {
   sample.movieId = i + '';
 }
 
-console.log(sampleArr);
+const masterCountries = [
+  {
+    category: "COUNTRY",
+    code: "AUSTRALIA",
+    name: "Australia"
+  },
+  {
+    category: "COUNTRY",
+    code: "CANADA",
+    name: "Canada"
+  },
+  {
+    category: "COUNTRY",
+    code: "CHINA",
+    name: "China"
+  }];
+const masterLanguages = [
+
+  {
+    category: "LANGUAGE",
+    code: "ALGONQUIN",
+    name: "Algonquin"
+  },
+  {
+    category: "LANGUAGE",
+    code: "CANTONESE",
+    name: "Cantonese"
+  },
+  {
+    category: "LANGUAGE",
+    code: "DUTCH",
+    name: "Dutch"
+  },
+  {
+    category: "LANGUAGE",
+    code: "ENGLISH",
+    name: "English"
+  }];
+
+const masterMovieDurations = [
+
+  {
+    category: "MOVIE_DURATION",
+    code: "60",
+    name: "1 hour"
+  },
+  {
+    category: "MOVIE_DURATION",
+    code: "90",
+    name: "1 hour 30 min"
+  },
+  {
+    category: "MOVIE_DURATION",
+    code: "120",
+    name: "2 hours"
+  },
+  {
+    category: "MOVIE_DURATION",
+    code: "140",
+    name: "2 hours  20 min"
+  }
+];
+
+const masters: IMasters = {
+  masterCountries: masterCountries,
+  masterLanguages: masterLanguages,
+  masterMovieDurations: masterMovieDurations
+}
 //---------
 
 
@@ -58,6 +126,7 @@ function App() {
   return (
     <div className="movie-main-container">
       <MovieCardList data={sampleArr}></MovieCardList>
+      <MoviePopup {...masters}></MoviePopup>
     </div>
   );
 }

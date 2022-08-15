@@ -1,9 +1,21 @@
 .movie-body {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+
     padding: var(--cd-space-3) var(--cd-space-3) 0 var(--cd-space-3);
     background-color: var(--cd-clr-1);
     color: var(--cd-clr-1-txt);
     overflow-y: auto;
+}
+
+@media (min-width:768px) {
+    .movie-body {
+        flex-direction: row;
+        flex-wrap: wrap;
+        /* justify-content: space-around; */
+
+        padding: var(--cd-space-8) 0 0 var(--cd-space-8);
+    }
 }
