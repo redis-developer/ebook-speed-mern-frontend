@@ -5,6 +5,7 @@ import './app.css';
 
 import MovieCardList from '../movie-card-list/movie-card-list';
 import MoviePopup from '../movie-popup/movie-popup';
+import SearchHeader from '../search-header/search-header';
 
 
 //-----temp
@@ -125,6 +126,7 @@ const masters: IMasters = {
 function App() {
   return (
     <div className="movie-main-container">
+      <SearchHeader {...masters}></SearchHeader>
       <MovieCardList data={sampleArr}></MovieCardList>
       <MoviePopup {...masters}></MoviePopup>
     </div>

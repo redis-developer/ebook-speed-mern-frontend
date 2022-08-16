@@ -3,8 +3,8 @@ import type { IMovie } from '../../models/movie-mdl';
 import './movie-card.css';
 
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash, faStar, faGlobe, faComment, faClock, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash, faStar, faGlobe, faComment, faClock, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 function MovieCard(props: IMovie) {

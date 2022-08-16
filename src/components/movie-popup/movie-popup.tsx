@@ -4,8 +4,8 @@ import './movie-popup.css';
 
 import React from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 
 function MoviePopup(props: IMasters) {
 
