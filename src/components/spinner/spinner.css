@@ -23,11 +23,11 @@
 
 .spinner-icon {
     font-size: var(--cd-font-8);
-    color: var(--cd-clr-8);
+    color: var(--cd-clr-9);
 }
 
 .spinner-label {
     font-size: var(--cd-font-4);
-    color: var(--cd-clr-8);
+    color: var(--cd-clr-9);
     font-weight: 700;
 }

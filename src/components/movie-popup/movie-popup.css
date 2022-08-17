@@ -130,6 +130,7 @@
     color: var(--cd-clr-8-txt);
     cursor: pointer;
     font-weight: 500;
+    border: none;
 
 }
 

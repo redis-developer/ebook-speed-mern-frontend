@@ -90,8 +90,8 @@ function App() {
   const [showSpinner, setShowSpinner] = useState(false);
 
 
-  const onSearch = async (isBasicSearch: boolean, _searchText: string) => {//TODO import onSearch type
-    if (isBasicSearch) {
+  const onSearch = async (isTextSearch: boolean, _searchText: string) => {//TODO import onSearch type
+    if (isTextSearch) {
       setShowSpinner(true);
       const dataArr = await getMoviesByText(_searchText);
       if (dataArr && dataArr.length) {
@@ -114,7 +114,10 @@ function App() {
   return (
     <div className="movie-main-container">
       <SearchHeader {...masters} onSearch={onSearch}></SearchHeader>
-      <MovieCardList data={movieList}></MovieCardList>
+      {
+        !showSpinner &&
+        <MovieCardList data={movieList}></MovieCardList>
+      }
       <MoviePopup {...masters}></MoviePopup>
       <Spinner show={showSpinner}></Spinner>
     </div>
