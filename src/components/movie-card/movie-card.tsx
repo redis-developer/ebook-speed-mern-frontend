@@ -6,7 +6,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faStar, faGlobe, faComment, faClock, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
-
+//TODO: check browser console for frequent requests
 function MovieCard(props: IMovie) {
     return (
         <div className="movie-card-container">
@@ -32,7 +32,7 @@ function MovieCard(props: IMovie) {
                         <div className="movie-card-desc">{props.plot}</div>
                     </div>
                     <div className="movie-card-img-container">
-                        <img className="movie-card-img" src={props.poster} alt="Movie Poster" />
+                        <img className="movie-card-img" src={props.poster} alt="Movie Poster" key={props.movieId + 'Img'} />
                     </div>
                 </div>
                 <div className="movie-card-body-bottom">

@@ -1,0 +1,33 @@
+.spinner-container {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .6);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.spinner-container.active {
+    display: flex;
+}
+
+
+.spinner-elm {
+    display: flex;
+    flex-direction: column;
+}
+
+.spinner-icon {
+    font-size: var(--cd-font-8);
+    color: var(--cd-clr-8);
+}
+
+.spinner-label {
+    font-size: var(--cd-font-4);
+    color: var(--cd-clr-8);
+    font-weight: 700;
+}

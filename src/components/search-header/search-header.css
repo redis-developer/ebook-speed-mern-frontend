@@ -71,7 +71,7 @@
 .movie-search-advanced-last-lbl {
     min-width: 80px;
     text-align: end;
-    font-size: 12px;
+    font-size: var(--cd-font-3);
     text-decoration: underline;
     cursor: pointer;
 
