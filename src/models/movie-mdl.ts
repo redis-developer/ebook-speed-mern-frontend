@@ -56,20 +56,8 @@ const sample = {
 };
 */
 
-interface IMasterCategory {
-    category: string;
-    code: string;
-    name: string;
-}
-
-interface IMasters {
-    masterCountries: IMasterCategory[],
-    masterLanguages: IMasterCategory[],
-    masterMovieDurations: IMasterCategory[]
-}
 
 export type {
-    IMovie,
-    IMasters
+    IMovie
 };
 

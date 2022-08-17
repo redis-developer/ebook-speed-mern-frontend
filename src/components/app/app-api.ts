@@ -1,9 +1,10 @@
-import type { IMovie, IMasters } from '../../models/movie-mdl';
+import type { IMovie } from '../../models/movie-mdl';
+import type { IMasterCategoryApiObject } from '../../models/misc';
 
 import axios from "axios";
 import { getClientConfig } from "../../config/client-config";
 
-const handlePostApi = (_url: string, _body: string) => {
+const handlePostApi = (_url: string, _body: unknown) => {
     let promObj = new Promise((resolve, reject) => {
         if (_url && _body) {
             axios.post(_url, _body)
@@ -48,6 +49,27 @@ const getMoviesByText = (_searchText?: string): Promise<IMovie[]> => {
     return handlePostApi(url, body);
 };
 
+const getMastersByCategory = (_categories: string[]): Promise<IMasterCategoryApiObject> => {
+    let promObj = null;
+    if (_categories && _categories.length) {
+        const CLIENT_CONFIG = getClientConfig();
+        const url = CLIENT_CONFIG.REACT_APP_API_URL + 'getMastersByCategory';
+        const body = {
+            categories: _categories
+        };
+
+        promObj = handlePostApi(url, body);
+    }
+    else {
+        promObj = Promise.reject("Categories filter cannot be empty!");
+    }
+    //@ts-ignore
+    return promObj;
+}
+
+
+
 export {
-    getMoviesByText
+    getMoviesByText,
+    getMastersByCategory
 };

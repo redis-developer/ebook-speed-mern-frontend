@@ -1,94 +1,25 @@
-import type { IMovie, IMasters } from '../../models/movie-mdl';
+import type { IMovie } from '../../models/movie-mdl';
+import type { IMasterCategory } from '../../models/master-category-mdl';
 
 import React, { useEffect, useState } from 'react';
 import './app.css';
+
+import { MASTER_CATEGORY_NAME } from '../../models/misc';
 
 import MovieCardList from '../movie-card-list/movie-card-list';
 import MoviePopup from '../movie-popup/movie-popup';
 import SearchHeader from '../search-header/search-header';
 import Spinner from '../spinner/spinner';
 
-import { getMoviesByText } from './app-api';
-
-
-//-----temp
-
-const masterCountries = [
-  {
-    category: "COUNTRY",
-    code: "AUSTRALIA",
-    name: "Australia"
-  },
-  {
-    category: "COUNTRY",
-    code: "CANADA",
-    name: "Canada"
-  },
-  {
-    category: "COUNTRY",
-    code: "CHINA",
-    name: "China"
-  }];
-const masterLanguages = [
-
-  {
-    category: "LANGUAGE",
-    code: "ALGONQUIN",
-    name: "Algonquin"
-  },
-  {
-    category: "LANGUAGE",
-    code: "CANTONESE",
-    name: "Cantonese"
-  },
-  {
-    category: "LANGUAGE",
-    code: "DUTCH",
-    name: "Dutch"
-  },
-  {
-    category: "LANGUAGE",
-    code: "ENGLISH",
-    name: "English"
-  }];
-
-const masterMovieDurations = [
-
-  {
-    category: "MOVIE_DURATION",
-    code: "60",
-    name: "1 hour"
-  },
-  {
-    category: "MOVIE_DURATION",
-    code: "90",
-    name: "1 hour 30 min"
-  },
-  {
-    category: "MOVIE_DURATION",
-    code: "120",
-    name: "2 hours"
-  },
-  {
-    category: "MOVIE_DURATION",
-    code: "140",
-    name: "2 hours  20 min"
-  }
-];
-
-const masters: IMasters = {
-  masterCountries: masterCountries,
-  masterLanguages: masterLanguages,
-  masterMovieDurations: masterMovieDurations
-}
-//---------
-
+import { getMoviesByText, getMastersByCategory } from './app-api';
 
 
 function App() {
-  const [movieList, setMovieList] = useState<IMovie[]>([]);
   const [showSpinner, setShowSpinner] = useState(false);
 
+  const [movieList, setMovieList] = useState<IMovie[]>([]);
+  const [masterCountries, setMasterCountries] = useState<IMasterCategory[]>([]);
+  const [masterLanguages, setMasterLanguages] = useState<IMasterCategory[]>([]);
 
   const onSearch = async (isTextSearch: boolean, _searchText: string) => {//TODO import onSearch type
     if (isTextSearch) {
@@ -104,21 +35,50 @@ function App() {
     }
   }
 
+  const onPageLoad = async () => {
+    setShowSpinner(true);
+
+    const moviesPromObj = getMoviesByText('');//load all movies
+    const moviesPromObj2 = moviesPromObj.then((dataArr) => {
+      if (dataArr && dataArr.length) {
+        setMovieList(dataArr);
+      }
+      else {
+        setMovieList([]);
+      }
+    })
+    const mastersPromObj = getMastersByCategory([MASTER_CATEGORY_NAME.COUNTRY, MASTER_CATEGORY_NAME.LANGUAGE]);
+    const mastersPromObj2 = mastersPromObj.then((data) => {
+      if (data) {
+        if (data[MASTER_CATEGORY_NAME.COUNTRY]) {
+          setMasterCountries(data[MASTER_CATEGORY_NAME.COUNTRY])
+        }
+        if (data[MASTER_CATEGORY_NAME.LANGUAGE]) {
+          setMasterLanguages(data[MASTER_CATEGORY_NAME.LANGUAGE])
+        }
+      }
+    })
+    const promObj = Promise.all([moviesPromObj2, mastersPromObj2]);
+    await promObj;
+
+    setShowSpinner(false);
+  }
+
 
   useEffect(() => {
-    onSearch(true, ''); //load all movies
+    onPageLoad();
   }, []);
 
 
 
   return (
     <div className="movie-main-container">
-      <SearchHeader {...masters} onSearch={onSearch}></SearchHeader>
+      <SearchHeader masterCountries={masterCountries} masterLanguages={masterLanguages} onSearch={onSearch}></SearchHeader>
       {
         !showSpinner &&
         <MovieCardList data={movieList}></MovieCardList>
       }
-      <MoviePopup {...masters}></MoviePopup>
+      <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages}></MoviePopup>
       <Spinner show={showSpinner}></Spinner>
     </div>
   );

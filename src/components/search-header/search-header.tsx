@@ -1,4 +1,4 @@
-import type { IMasters } from '../../models/movie-mdl';
+import type { IMasterCategory } from "../../models/master-category-mdl";
 
 import "./search-header.css";
 
@@ -7,8 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 type searchHandlerType = (isTextSearch: boolean, _searchText: string) => void;
-interface ISearchHeaderProps extends IMasters {
-    onSearch?: searchHandlerType
+interface ISearchHeaderProps {
+    masterCountries: IMasterCategory[];
+    masterLanguages: IMasterCategory[];
+    onSearch?: searchHandlerType;
 }
 
 function SearchHeader(props: ISearchHeaderProps) {
@@ -66,12 +68,9 @@ function SearchHeader(props: ISearchHeaderProps) {
                     </div>
                     <div className="movie-basic-search-container">
                         <input type="text" className="movie-basic-search-input movie-basic-search-title-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput" />
-                        <select className="movie-basic-search-input" tabIndex={12}>
-                            <option key="0" value="0">Select Duration</option>
-                            {props.masterMovieDurations.map((movieDuration) => {
-                                return <option key={movieDuration.code} value={movieDuration.code}> {movieDuration.name}</option>;
-                            })}
-                        </select>
+
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={30} max={180} tabIndex={12} />
+
                         <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year" min={1800} max={2100} tabIndex={13} />
                         <select className="movie-basic-search-input" tabIndex={14}>
                             <option key="0" value="0">Select Country</option>
