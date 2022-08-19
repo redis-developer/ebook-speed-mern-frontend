@@ -93,6 +93,7 @@
 
 .movie-popup-col {
     flex-grow: 1;
+    margin-right: 2%;
     max-width: 48%;
 }
 
@@ -118,6 +119,7 @@
 
 .movie-popup-btn-row {
     justify-content: flex-end;
+    margin-top: 20px;
 }
 
 .movie-popup-btn {

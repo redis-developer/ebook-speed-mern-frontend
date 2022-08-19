@@ -15,18 +15,44 @@ interface ISearchHeaderProps {
 
 function SearchHeader(props: ISearchHeaderProps) {
 
-    const [advSearchClass, setAdvSearchClass] = useState("");
+    //TODO: move to custom state/ hook
+    const [basicSearchClass, setBasicSearchClass] = useState("");
 
-    const evtClickToggleSearchSection = (_show?: boolean) => {
-        //TODO clear all the fields while switching search
+    const [textSearchInput, setTextSearchInput] = useState("");
+    const [basicSearchTitle, setBasicSearchTitle] = useState("");
+    const [basicSearchDuration, setBasicSearchDuration] = useState(0);
+    const [basicSearchYear, setBasicSearchYear] = useState(0);
+    const [basicSearchCountry, setBasicSearchCountry] = useState("");
+    const [basicSearchRating, setBasicSearchRating] = useState(0);
+    const [basicSearchLanguage, setBasicSearchLanguage] = useState("");
+
+
+    const textChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<any>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        if (setterFn && evt) {
+            setterFn(evt.target.value);
+        }
+    };
+
+    const clearSearchFields = () => {
+        setTextSearchInput("");
+        setBasicSearchTitle("");
+        setBasicSearchDuration(0);
+        setBasicSearchYear(0);
+        setBasicSearchCountry("");
+        setBasicSearchRating(0);
+        setBasicSearchLanguage("");
+    };
+
+    const evtClickToggleSearchSection = (_basicShow?: boolean) => {
+        clearSearchFields();
 
         let firstElm: HTMLInputElement | null = null;
-        if (_show) {
-            setAdvSearchClass("movie-basic-search-active");
+        if (_basicShow) {
+            setBasicSearchClass("movie-basic-search-active");
             firstElm = document.getElementById("basicSearchTitleInput") as HTMLInputElement;
         }
         else {
-            setAdvSearchClass("");
+            setBasicSearchClass("");
             firstElm = document.getElementById("textSearchInput") as HTMLInputElement;
         }
 
@@ -38,12 +64,11 @@ function SearchHeader(props: ISearchHeaderProps) {
 
     }
 
-    const evtClickSearch = (evt?: FormEvent) => { //TODO check any where show hide by ID logic - getElementById
+    const evtClickSearch = (evt?: FormEvent) => {
         if (props.onSearch) {
-            let isTextSearch = !(!!advSearchClass);
+            let isTextSearch = !(!!basicSearchClass);
 
-            const textSearchInputElm = (document.getElementById("textSearchInput")) as HTMLInputElement; //TODO: use state
-            props.onSearch(isTextSearch, textSearchInputElm?.value);
+            props.onSearch(isTextSearch, textSearchInput);
         }
 
         if (evt) {
@@ -57,29 +82,39 @@ function SearchHeader(props: ISearchHeaderProps) {
             <div className="search-header">
 
                 <div className="header-title">MOVIE APP</div>
-                <div className={"movie-search-container " + advSearchClass}>
+                <div className={"movie-search-container " + basicSearchClass}>
                     <div className="movie-text-search-container">
                         <div className="movie-text-search-elm">
                             <div className="movie-text-search-icon">
                                 <FontAwesomeIcon icon={faSearch} />
                             </div>
-                            <input type="text" className="movie-text-search-input" tabIndex={11} id="textSearchInput" />
+                            <input type="text" className="movie-text-search-input" tabIndex={11} id="textSearchInput"
+                                value={textSearchInput} onChange={(evt) => { textChangeHandler(setTextSearchInput, evt) }} />
                         </div>
                     </div>
                     <div className="movie-basic-search-container">
-                        <input type="text" className="movie-basic-search-input movie-basic-search-title-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput" />
+                        <input type="text" className="movie-basic-search-input movie-basic-search-title-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput"
+                            value={basicSearchTitle} onChange={(evt) => { textChangeHandler(setBasicSearchTitle, evt) }} />
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={30} max={180} tabIndex={12} />
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={30} max={180} tabIndex={12}
+                            value={basicSearchDuration} onChange={(evt) => { textChangeHandler(setBasicSearchDuration, evt) }} />
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year" min={1800} max={2100} tabIndex={13} />
-                        <select className="movie-basic-search-input" tabIndex={14}>
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year" min={1800} max={2100} tabIndex={13}
+                            value={basicSearchYear} onChange={(evt) => { textChangeHandler(setBasicSearchYear, evt) }} />
+
+                        <select className="movie-basic-search-input" tabIndex={14}
+                            value={basicSearchCountry} onChange={(evt) => { textChangeHandler(setBasicSearchCountry, evt) }} >
                             <option key="0" value="0">Select Country</option>
                             {props.masterCountries.map((country) => {
                                 return <option key={country.code} value={country.code}> {country.name}</option>;
                             })}
                         </select>
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating" min={0} max={10} tabIndex={15} />
-                        <select className="movie-basic-search-input" tabIndex={16}>
+
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating" min={0} max={10} tabIndex={15}
+                            value={basicSearchRating} onChange={(evt) => { textChangeHandler(setBasicSearchRating, evt) }} />
+
+                        <select className="movie-basic-search-input" tabIndex={16}
+                            value={basicSearchLanguage} onChange={(evt) => { textChangeHandler(setBasicSearchLanguage, evt) }} >
                             <option key="0" value="0">Select Language</option>
                             {props.masterLanguages.map((Language) => {
                                 return <option key={Language.code} value={Language.code}> {Language.name}</option>;
@@ -93,6 +128,7 @@ function SearchHeader(props: ISearchHeaderProps) {
 
             </div>
         </form>
+
     );
 }
 

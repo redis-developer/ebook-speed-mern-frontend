@@ -24,12 +24,18 @@ function App() {
   const onSearch = async (isTextSearch: boolean, _searchText: string) => {//TODO import onSearch type
     if (isTextSearch) {
       setShowSpinner(true);
-      const dataArr = await getMoviesByText(_searchText);
-      if (dataArr && dataArr.length) {
-        setMovieList(dataArr);
+      try {
+
+        const dataArr = await getMoviesByText(_searchText);
+        if (dataArr && dataArr.length) {
+          setMovieList(dataArr);
+        }
+        else {
+          setMovieList([]);
+        }
       }
-      else {
-        setMovieList([]);
+      catch (err) {
+        console.log(err);
       }
       setShowSpinner(false);
     }
@@ -38,29 +44,33 @@ function App() {
   const onPageLoad = async () => {
     setShowSpinner(true);
 
-    const moviesPromObj = getMoviesByText('');//load all movies
-    const moviesPromObj2 = moviesPromObj.then((dataArr) => {
-      if (dataArr && dataArr.length) {
-        setMovieList(dataArr);
-      }
-      else {
-        setMovieList([]);
-      }
-    })
-    const mastersPromObj = getMastersByCategory([MASTER_CATEGORY_NAME.COUNTRY, MASTER_CATEGORY_NAME.LANGUAGE]);
-    const mastersPromObj2 = mastersPromObj.then((data) => {
-      if (data) {
-        if (data[MASTER_CATEGORY_NAME.COUNTRY]) {
-          setMasterCountries(data[MASTER_CATEGORY_NAME.COUNTRY])
+    try {
+      const moviesPromObj = getMoviesByText('');//load all movies
+      const moviesPromObj2 = moviesPromObj.then((dataArr) => {
+        if (dataArr && dataArr.length) {
+          setMovieList(dataArr);
         }
-        if (data[MASTER_CATEGORY_NAME.LANGUAGE]) {
-          setMasterLanguages(data[MASTER_CATEGORY_NAME.LANGUAGE])
+        else {
+          setMovieList([]);
         }
-      }
-    })
-    const promObj = Promise.all([moviesPromObj2, mastersPromObj2]);
-    await promObj;
-
+      })
+      const mastersPromObj = getMastersByCategory([MASTER_CATEGORY_NAME.COUNTRY, MASTER_CATEGORY_NAME.LANGUAGE]);
+      const mastersPromObj2 = mastersPromObj.then((data) => {
+        if (data) {
+          if (data[MASTER_CATEGORY_NAME.COUNTRY]) {
+            setMasterCountries(data[MASTER_CATEGORY_NAME.COUNTRY])
+          }
+          if (data[MASTER_CATEGORY_NAME.LANGUAGE]) {
+            setMasterLanguages(data[MASTER_CATEGORY_NAME.LANGUAGE])
+          }
+        }
+      })
+      const promObj = Promise.all([moviesPromObj2, mastersPromObj2]);
+      await promObj;
+    }
+    catch (err) {
+      console.log(err);
+    }
     setShowSpinner(false);
   }
 
