@@ -5,20 +5,20 @@ interface IRangeNumber {
 }
 
 interface IMovie {
-    movieId: string;
+    movieId?: string;
 
-    title: string;
-    tagline: string;
-    plot: string;
+    title?: string;
+    tagline?: string;
+    plot?: string;
 
-    poster?: string;
     url?: string;
-    released: string | Date | null;
+    poster?: string;
+    released?: string | Date | null;
     year?: IRangeNumber;
-    duration: number;
+    duration?: number;
 
-    languages: string[] | null;
-    countries: string[] | null;
+    languages?: string[] | null;
+    countries?: string[] | null;
 
     imdbId?: string;
     imdbRating?: number;

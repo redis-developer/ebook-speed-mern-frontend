@@ -1,6 +1,7 @@
 import type { IMovie } from '../../models/movie-mdl';
 import type { IMasterCategory } from '../../models/master-category-mdl';
 import type { searchHandlerType } from '../search-header/search-header';
+import type { saveHandlerType } from '../movie-popup/movie-popup';
 
 import React, { useEffect, useState } from 'react';
 import './app.css';
@@ -12,7 +13,7 @@ import MoviePopup from '../movie-popup/movie-popup';
 import SearchHeader from '../search-header/search-header';
 import Spinner from '../spinner/spinner';
 
-import { getMoviesByText, getMastersByCategory, getMoviesByBasicFilters } from './app-api';
+import { getMoviesByText, getMastersByCategory, getMoviesByBasicFilters, insertMovie } from './app-api';
 
 
 function App() {
@@ -22,12 +23,12 @@ function App() {
   const [masterCountries, setMasterCountries] = useState<IMasterCategory[]>([]);
   const [masterLanguages, setMasterLanguages] = useState<IMasterCategory[]>([]);
 
-  const onSearch: searchHandlerType = async (isTextSearch, _searchText, _movieSearchObj) => {
+  const onSearch: searchHandlerType = async (_isTextSearch, _searchText, _movieSearchObj) => {
     setShowSpinner(true);
 
     try {
       let dataArr: IMovie[] = [];
-      if (isTextSearch) {
+      if (_isTextSearch) {
         dataArr = await getMoviesByText(_searchText);
       }
       else if (_movieSearchObj) {
@@ -46,6 +47,25 @@ function App() {
       console.log(err);
     }
 
+    setShowSpinner(false);
+
+  }
+
+  const onSave: saveHandlerType = async (_movieObj) => {
+    setShowSpinner(true);
+    try {
+      if (_movieObj) {
+        const movieId = await insertMovie(_movieObj);
+        if (movieId) {
+          _movieObj.movieId = movieId;
+          setMovieList([_movieObj, ...movieList]);
+        }
+      }
+
+    }
+    catch (err) {
+      console.log(err);
+    }
     setShowSpinner(false);
 
   }
@@ -97,7 +117,7 @@ function App() {
         !showSpinner &&
         <MovieCardList data={movieList}></MovieCardList>
       }
-      <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages}></MoviePopup>
+      <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages} onSave={onSave}></MoviePopup>
       <Spinner show={showSpinner}></Spinner>
     </div>
   );

@@ -101,7 +101,7 @@ function SearchHeader(props: ISearchHeaderProps) {
                 if (basicSearchYear) {
                     basicFormSearchObj.releaseYear = basicSearchYear;
                 }
-                if (basicSearchCountry && basicSearchCountry !== "0") {
+                if (basicSearchCountry) {
                     basicFormSearchObj.countries = [basicSearchCountry]; //TODO later multi select dropdown in UI
                 }
                 if (basicSearchRating) {
@@ -143,7 +143,7 @@ function SearchHeader(props: ISearchHeaderProps) {
                         <input type="text" className="movie-basic-search-input movie-basic-search-title-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput"
                             value={basicSearchTitle} onChange={(evt) => { textChangeHandler(setBasicSearchTitle, evt) }} />
 
-                        {/* <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={30} max={180} tabIndex={12}
+                        {/* <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={1} max={250} tabIndex={12}
                             value={basicSearchDuration} onChange={(evt) => { textChangeHandler(setBasicSearchDuration, evt) }} /> */}
 
                         <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year"
@@ -152,7 +152,7 @@ function SearchHeader(props: ISearchHeaderProps) {
 
                         <select className="movie-basic-search-input" tabIndex={14}
                             value={basicSearchCountry} onChange={(evt) => { textChangeHandler(setBasicSearchCountry, evt) }} >
-                            <option key="0" value="0">Select Country</option>
+                            <option value="">Select Country</option>
                             {props.masterCountries.map((country) => {
                                 return <option key={country.code} value={country.code}> {country.name}</option>;
                             })}
@@ -170,7 +170,7 @@ function SearchHeader(props: ISearchHeaderProps) {
                             })}
                         </select> */}
                     </div>
-                    <input type="submit" className="movie-search-btn" onClick={() => { evtClickSearch() }} tabIndex={20} value="SEARCH" />
+                    <input type="submit" className="movie-search-btn" tabIndex={20} value="SEARCH" />
                     <input type="button" className="movie-basic-search-last-lbl" onClick={() => { evtClickToggleSearchSection(true) }} tabIndex={21} value="Basic search" />
                     <input type="button" className="movie-text-search-lbl" onClick={() => { evtClickToggleSearchSection() }} tabIndex={21} value="Text search" />
                 </div>
