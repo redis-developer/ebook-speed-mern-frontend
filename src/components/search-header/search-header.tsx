@@ -1,3 +1,4 @@
+import type { IMovie } from "../../models/movie-mdl";
 import type { IMasterCategory } from "../../models/master-category-mdl";
 
 import "./search-header.css";
@@ -6,12 +7,28 @@ import React, { FormEvent, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-type searchHandlerType = (isTextSearch: boolean, _searchText: string) => void;
+
+interface IBasicFormSearch { //TODO move types to separate file
+    title?: string;
+    releaseYear?: number;
+    countries?: string[];
+    imdbRating?: number;
+    // duration: number;
+    // languages?: string[];
+}
+
+type searchHandlerType = ( //TODO add duration & languages in search API
+    isTextSearch: boolean,
+    _searchText?: string,
+    _movieSearchObj?: IBasicFormSearch) => void;
+
 interface ISearchHeaderProps {
     masterCountries: IMasterCategory[];
     masterLanguages: IMasterCategory[];
     onSearch?: searchHandlerType;
 }
+
+
 
 function SearchHeader(props: ISearchHeaderProps) {
 
@@ -20,27 +37,32 @@ function SearchHeader(props: ISearchHeaderProps) {
 
     const [textSearchInput, setTextSearchInput] = useState("");
     const [basicSearchTitle, setBasicSearchTitle] = useState("");
-    const [basicSearchDuration, setBasicSearchDuration] = useState(0);
+    // const [basicSearchDuration, setBasicSearchDuration] = useState(0);
     const [basicSearchYear, setBasicSearchYear] = useState(0);
     const [basicSearchCountry, setBasicSearchCountry] = useState("");
     const [basicSearchRating, setBasicSearchRating] = useState(0);
-    const [basicSearchLanguage, setBasicSearchLanguage] = useState("");
+    // const [basicSearchLanguage, setBasicSearchLanguage] = useState("");
 
 
-    const textChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<any>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const textChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<string>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         if (setterFn && evt) {
             setterFn(evt.target.value);
+        }
+    };
+    const numberChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<number>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        if (evt && evt.target.value) {
+            setterFn(parseInt(evt.target.value));
         }
     };
 
     const clearSearchFields = () => {
         setTextSearchInput("");
         setBasicSearchTitle("");
-        setBasicSearchDuration(0);
+        // setBasicSearchDuration(0);
         setBasicSearchYear(0);
         setBasicSearchCountry("");
         setBasicSearchRating(0);
-        setBasicSearchLanguage("");
+        // setBasicSearchLanguage("");
     };
 
     const evtClickToggleSearchSection = (_basicShow?: boolean) => {
@@ -66,9 +88,34 @@ function SearchHeader(props: ISearchHeaderProps) {
 
     const evtClickSearch = (evt?: FormEvent) => {
         if (props.onSearch) {
-            let isTextSearch = !(!!basicSearchClass);
+            let isTextSearch = !(!!basicSearchClass); //TODO UI validations 
 
-            props.onSearch(isTextSearch, textSearchInput);
+            if (isTextSearch) {
+                props.onSearch(isTextSearch, textSearchInput, {});
+            }
+            else {
+                const basicFormSearchObj: IBasicFormSearch = {};
+                if (basicSearchTitle) {
+                    basicFormSearchObj.title = basicSearchTitle;
+                }
+                if (basicSearchYear) {
+                    basicFormSearchObj.releaseYear = basicSearchYear;
+                }
+                if (basicSearchCountry && basicSearchCountry !== "0") {
+                    basicFormSearchObj.countries = [basicSearchCountry]; //TODO later multi select dropdown in UI
+                }
+                if (basicSearchRating) {
+                    basicFormSearchObj.imdbRating = basicSearchRating;
+                }
+
+                if (basicFormSearchObj && Object.keys(basicFormSearchObj).length > 0) {
+                    props.onSearch(isTextSearch, "", basicFormSearchObj);
+                }
+                else {
+                    alert("At least one key to filter is mandatory!");
+                }
+
+            }
         }
 
         if (evt) {
@@ -96,11 +143,12 @@ function SearchHeader(props: ISearchHeaderProps) {
                         <input type="text" className="movie-basic-search-input movie-basic-search-title-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput"
                             value={basicSearchTitle} onChange={(evt) => { textChangeHandler(setBasicSearchTitle, evt) }} />
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={30} max={180} tabIndex={12}
-                            value={basicSearchDuration} onChange={(evt) => { textChangeHandler(setBasicSearchDuration, evt) }} />
+                        {/* <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={30} max={180} tabIndex={12}
+                            value={basicSearchDuration} onChange={(evt) => { textChangeHandler(setBasicSearchDuration, evt) }} /> */}
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year" min={1800} max={2100} tabIndex={13}
-                            value={basicSearchYear} onChange={(evt) => { textChangeHandler(setBasicSearchYear, evt) }} />
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year"
+                            max={2100} tabIndex={13}
+                            value={basicSearchYear} onChange={(evt) => { numberChangeHandler(setBasicSearchYear, evt) }} />
 
                         <select className="movie-basic-search-input" tabIndex={14}
                             value={basicSearchCountry} onChange={(evt) => { textChangeHandler(setBasicSearchCountry, evt) }} >
@@ -110,16 +158,17 @@ function SearchHeader(props: ISearchHeaderProps) {
                             })}
                         </select>
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating" min={0} max={10} tabIndex={15}
-                            value={basicSearchRating} onChange={(evt) => { textChangeHandler(setBasicSearchRating, evt) }} />
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating"
+                            min={0} max={10} tabIndex={15}
+                            value={basicSearchRating} onChange={(evt) => { numberChangeHandler(setBasicSearchRating, evt) }} />
 
-                        <select className="movie-basic-search-input" tabIndex={16}
+                        {/* <select className="movie-basic-search-input" tabIndex={16}
                             value={basicSearchLanguage} onChange={(evt) => { textChangeHandler(setBasicSearchLanguage, evt) }} >
                             <option key="0" value="0">Select Language</option>
                             {props.masterLanguages.map((Language) => {
                                 return <option key={Language.code} value={Language.code}> {Language.name}</option>;
                             })}
-                        </select>
+                        </select> */}
                     </div>
                     <input type="submit" className="movie-search-btn" onClick={() => { evtClickSearch() }} tabIndex={20} value="SEARCH" />
                     <input type="button" className="movie-basic-search-last-lbl" onClick={() => { evtClickToggleSearchSection(true) }} tabIndex={21} value="Basic search" />
@@ -133,3 +182,8 @@ function SearchHeader(props: ISearchHeaderProps) {
 }
 
 export default SearchHeader;
+
+export type {
+    searchHandlerType,
+    IBasicFormSearch
+};

@@ -1,5 +1,6 @@
 import type { IMovie } from '../../models/movie-mdl';
 import type { IMasterCategory } from '../../models/master-category-mdl';
+import type { searchHandlerType } from '../search-header/search-header';
 
 import React, { useEffect, useState } from 'react';
 import './app.css';
@@ -11,7 +12,7 @@ import MoviePopup from '../movie-popup/movie-popup';
 import SearchHeader from '../search-header/search-header';
 import Spinner from '../spinner/spinner';
 
-import { getMoviesByText, getMastersByCategory } from './app-api';
+import { getMoviesByText, getMastersByCategory, getMoviesByBasicFilters } from './app-api';
 
 
 function App() {
@@ -21,24 +22,32 @@ function App() {
   const [masterCountries, setMasterCountries] = useState<IMasterCategory[]>([]);
   const [masterLanguages, setMasterLanguages] = useState<IMasterCategory[]>([]);
 
-  const onSearch = async (isTextSearch: boolean, _searchText: string) => {//TODO import onSearch type
-    if (isTextSearch) {
-      setShowSpinner(true);
-      try {
+  const onSearch: searchHandlerType = async (isTextSearch, _searchText, _movieSearchObj) => {
+    setShowSpinner(true);
 
-        const dataArr = await getMoviesByText(_searchText);
-        if (dataArr && dataArr.length) {
-          setMovieList(dataArr);
-        }
-        else {
-          setMovieList([]);
-        }
+    try {
+      let dataArr: IMovie[] = [];
+      if (isTextSearch) {
+        dataArr = await getMoviesByText(_searchText);
       }
-      catch (err) {
-        console.log(err);
+      else if (_movieSearchObj) {
+        dataArr = await getMoviesByBasicFilters(_movieSearchObj);
       }
-      setShowSpinner(false);
+
+      if (dataArr && dataArr.length) {
+        setMovieList(dataArr);
+      }
+      else {
+        setMovieList([]);
+      }
+
     }
+    catch (err) {
+      console.log(err);
+    }
+
+    setShowSpinner(false);
+
   }
 
   const onPageLoad = async () => {

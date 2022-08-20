@@ -1,5 +1,6 @@
 import type { IMovie } from '../../models/movie-mdl';
 import type { IMasterCategoryApiObject } from '../../models/misc';
+import type { IBasicFormSearch } from '../search-header/search-header';
 
 import axios from "axios";
 import { getClientConfig } from "../../config/client-config";
@@ -67,9 +68,18 @@ const getMastersByCategory = (_categories: string[]): Promise<IMasterCategoryApi
     return promObj;
 }
 
+const getMoviesByBasicFilters = (_movieSearchObj: IBasicFormSearch): Promise<IMovie[]> => {
 
+    const CLIENT_CONFIG = getClientConfig();
+    const url = CLIENT_CONFIG.REACT_APP_API_URL + 'getMoviesByBasicFilters';
+    const body = _movieSearchObj;
+
+    //@ts-ignore
+    return handlePostApi(url, body);
+};
 
 export {
     getMoviesByText,
-    getMastersByCategory
+    getMastersByCategory,
+    getMoviesByBasicFilters
 };
