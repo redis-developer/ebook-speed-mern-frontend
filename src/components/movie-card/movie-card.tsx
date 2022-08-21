@@ -6,12 +6,19 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faStar, faGlobe, faComment, faClock, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
+type editHandlerType = (_movieObj: IMovie) => void;
+
+interface IMovieCardProps {
+    data: IMovie;
+    evtClickEdit?: editHandlerType
+}
+
 //TODO: check browser console for frequent requests
-function MovieCard(props: IMovie) {
+function MovieCard(props: IMovieCardProps) {
     return (
         <div className="movie-card-container">
             <div className="movie-card-head-container">
-                <div className="movie-card-title">{props.title}</div>
+                <div className="movie-card-title">{props.data.title}</div>
                 <div className="movie-card-title-shadow-container">
                     <div className="movie-card-title-shadow movie-card-title-shadow-left"></div>
                     <div className="movie-card-title-shadow movie-card-title-shadow-right"></div>
@@ -22,17 +29,17 @@ function MovieCard(props: IMovie) {
                 <div className="movie-card-body-top">
                     <div className="movie-card-detail-container">
                         <div className="movie-card-action-icon-container">
-                            <div className="movie-card-action-icon" title="Edit">
+                            <div className="movie-card-action-icon" title="Edit" onClick={() => { props.evtClickEdit && props.evtClickEdit(props.data) }}>
                                 <FontAwesomeIcon icon={faEdit} />
                             </div>
                             <div className="movie-card-action-icon" title="Delete">
                                 <FontAwesomeIcon icon={faTrash} />
                             </div>
                         </div>
-                        <div className="movie-card-desc">{props.plot}</div>
+                        <div className="movie-card-desc">{props.data.plot}</div>
                     </div>
                     <div className="movie-card-img-container">
-                        <img className="movie-card-img" src={props.poster} alt="Movie Poster" key={props.movieId + 'Img'} />
+                        <img className="movie-card-img" src={props.data.poster} alt="Movie Poster" key={props.data.movieId + 'Img'} />
                     </div>
                 </div>
                 <div className="movie-card-body-bottom">
@@ -41,20 +48,20 @@ function MovieCard(props: IMovie) {
                             <div className="movie-card-detail-icon">
                                 <FontAwesomeIcon icon={faClock} />
                             </div>
-                            <div>{props.duration} min</div>
+                            <div>{props.data.duration} min</div>
                         </div>
                         <div className="movie-card-body-row">
                             <div className="movie-card-detail-icon">
                                 <FontAwesomeIcon icon={faCalendarAlt} />
                             </div>
-                            <div>{props.year && props.year.low}</div>
+                            <div>{props.data.year && props.data.year.low}</div>
                         </div>
                         <div className="movie-card-body-row">
                             <div className="movie-card-detail-icon movie-card-detail-icon-star">
                                 <FontAwesomeIcon icon={faStar} />
                             </div>
 
-                            <div>{props.imdbRating}</div>
+                            <div>{props.data.imdbRating}</div>
                         </div>
                     </div>
                     <div className="movie-card-body-row-container">
@@ -64,9 +71,9 @@ function MovieCard(props: IMovie) {
                                 <FontAwesomeIcon icon={faGlobe} />
                             </div>
 
-                            {props.countries && props.countries.length &&
+                            {props.data.countries && props.data.countries.length &&
                                 <div>
-                                    {props.countries.map((countryName: string) => {
+                                    {props.data.countries.map((countryName: string) => {
                                         return <div key={countryName}>{countryName}</div>
                                     })}
                                 </div>
@@ -77,9 +84,9 @@ function MovieCard(props: IMovie) {
                             <div className="movie-card-detail-icon">
                                 <FontAwesomeIcon icon={faComment} />
                             </div>
-                            {props.languages && props.languages.length &&
+                            {props.data.languages && props.data.languages.length &&
                                 <div>
-                                    {props.languages.map((languageName: string) => {
+                                    {props.data.languages.map((languageName: string) => {
                                         return <div key={languageName}>{languageName}</div>
                                     })}
                                 </div>
@@ -93,3 +100,7 @@ function MovieCard(props: IMovie) {
 }
 
 export default MovieCard;
+
+export type {
+    editHandlerType
+};

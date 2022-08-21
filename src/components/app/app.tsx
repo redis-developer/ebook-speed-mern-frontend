@@ -2,6 +2,8 @@ import type { IMovie } from '../../models/movie-mdl';
 import type { IMasterCategory } from '../../models/master-category-mdl';
 import type { searchHandlerType } from '../search-header/search-header';
 import type { saveHandlerType } from '../movie-popup/movie-popup';
+import type { editHandlerType } from '../movie-card/movie-card';
+
 
 import React, { useEffect, useState } from 'react';
 import './app.css';
@@ -13,11 +15,17 @@ import MoviePopup from '../movie-popup/movie-popup';
 import SearchHeader from '../search-header/search-header';
 import Spinner from '../spinner/spinner';
 
-import { getMoviesByText, getMastersByCategory, getMoviesByBasicFilters, insertMovie } from './app-api';
+import {
+  getMoviesByText, getMastersByCategory, getMoviesByBasicFilters,
+  insertMovie, updateMovie
+} from './app-api';
 
 
 function App() {
   const [showSpinner, setShowSpinner] = useState(false);
+
+  const [movieViewData, setMovieViewData] = useState({});
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const [movieList, setMovieList] = useState<IMovie[]>([]);
   const [masterCountries, setMasterCountries] = useState<IMasterCategory[]>([]);
@@ -51,14 +59,36 @@ function App() {
 
   }
 
-  const onSave: saveHandlerType = async (_movieObj) => {
+  const onInsert: saveHandlerType = async (_movieObj) => {
     setShowSpinner(true);
     try {
       if (_movieObj) {
-        const movieId = await insertMovie(_movieObj);
+        const insertedMovieObj = await insertMovie(_movieObj);
+        if (insertedMovieObj) {
+          setMovieList([insertedMovieObj, ...movieList]);
+        }
+      }
+
+    }
+    catch (err) {
+      console.log(err);//TODO user alert ?
+    }
+    setShowSpinner(false);
+  }
+
+  const onUpdate: saveHandlerType = async (_movieObj) => {
+    setShowSpinner(true);
+    try {
+      if (_movieObj && _movieObj.movieId) {
+        const movieId = await updateMovie(_movieObj);
         if (movieId) {
-          _movieObj.movieId = movieId;
-          setMovieList([_movieObj, ...movieList]);
+          let newMovieList = movieList.map((mov) => {
+            if (mov.movieId === movieId) {
+              mov = { ...mov, ..._movieObj };
+            }
+            return mov;
+          });
+          setMovieList(newMovieList);
         }
       }
 
@@ -67,7 +97,28 @@ function App() {
       console.log(err);
     }
     setShowSpinner(false);
+  }
+  const onDelete: saveHandlerType = async (_movieObj) => {
+    setShowSpinner(true);
+    try {
+      if (_movieObj && _movieObj.movieId) {
+        const movieId = await updateMovie({
+          movieId: _movieObj.movieId,
+          status: 0
+        });
+        if (movieId) {
+          let newMovieList = movieList.filter((mov) => {
+            return mov.movieId !== movieId;
+          });
+          setMovieList(newMovieList);
+        }
+      }
 
+    }
+    catch (err) {
+      console.log(err);
+    }
+    setShowSpinner(false);
   }
 
   const onPageLoad = async () => {
@@ -103,6 +154,11 @@ function App() {
     setShowSpinner(false);
   }
 
+  const evtClickEdit: editHandlerType = async (_movieObj) => {
+    setMovieViewData(_movieObj);
+    setIsPopupOpen(true);
+  }
+
 
   useEffect(() => {
     onPageLoad();
@@ -115,9 +171,12 @@ function App() {
       <SearchHeader masterCountries={masterCountries} masterLanguages={masterLanguages} onSearch={onSearch}></SearchHeader>
       {
         !showSpinner &&
-        <MovieCardList data={movieList}></MovieCardList>
+        <MovieCardList data={movieList} evtClickEdit={evtClickEdit}></MovieCardList>
       }
-      <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages} onSave={onSave}></MoviePopup>
+      <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages}
+        onInsert={onInsert} onUpdate={onUpdate}
+        movieViewData={movieViewData} isOpen={isPopupOpen} setIsPopupOpen={setIsPopupOpen}></MoviePopup>
+
       <Spinner show={showSpinner}></Spinner>
     </div>
   );

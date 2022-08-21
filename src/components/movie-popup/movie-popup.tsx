@@ -3,18 +3,23 @@ import type { IMasterCategory } from "../../models/master-category-mdl";
 
 import './movie-popup.css';
 
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import { IMovie } from "../../models/movie-mdl";
 
-type saveHandlerType = (_movieObj?: IMovie) => void;
+type saveHandlerType = (_movieObj?: IMovie) => Promise<void>;
 
 interface IMoviePopupProps {
     masterCountries: IMasterCategory[];
     masterLanguages: IMasterCategory[];
-    onSave?: saveHandlerType;
+    onInsert?: saveHandlerType;
+    onUpdate?: saveHandlerType;
+
+    movieViewData?: IMovie;
+    isOpen?: boolean;
+    setIsPopupOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //TODO form labels on top by default (no on click animation)
@@ -23,6 +28,7 @@ function MoviePopup(props: IMoviePopupProps) {
 
     const [showClass, setShowClass] = useState("");
 
+    const [movieId, setMovieId] = useState("");
     const [movieTitle, setMovieTitle] = useState("");
     const [movieURL, setMovieURL] = useState("");
     const [movieImageURL, setMovieImageURL] = useState("");
@@ -46,6 +52,7 @@ function MoviePopup(props: IMoviePopupProps) {
     };
 
     const clearFormFields = () => {
+        setMovieId("");
         setMovieTitle("");
         setMovieURL("");
         setMovieImageURL("");
@@ -64,53 +71,140 @@ function MoviePopup(props: IMoviePopupProps) {
         else {
             setShowClass("");
             clearFormFields();
+            if (props.setIsPopupOpen) {
+                props.setIsPopupOpen(false);
+            }
         }
     };
 
-    const evtClickSave = (evt?: FormEvent) => {
+    const fillPopupDetails = (movieObj: IMovie) => {
+
+        if (movieObj && movieObj.movieId) {
+            setMovieId(movieObj.movieId);
+
+            if (movieObj.title) {
+                setMovieTitle(movieObj.title);
+            }
+
+            if (movieObj.url) {
+                setMovieURL(movieObj.url);
+            }
+
+            if (movieObj.poster) {
+                setMovieImageURL(movieObj.poster);
+            }
+
+            if (movieObj.duration) {
+                setMovieDuration(movieObj.duration);
+            }
+
+            if (movieObj.released && typeof movieObj.released == "string") {
+                const releasedDate = (movieObj.released).split("T")[0];
+                setMovieDate(releasedDate);
+            }
+
+            if (movieObj.imdbRating) {
+                setMovieRating(movieObj.imdbRating);
+            }
+
+            if (movieObj.plot) {
+                setMoviePlot(movieObj.plot);
+            }
+
+            if (movieObj.countries && movieObj.countries.length) {
+                let countryName = movieObj.countries[0];
+                countryName = countryName.toUpperCase();
+                countryName = countryName.replace(" ", "_");
+                setMovieCountry(countryName);
+            }
+
+            if (movieObj.languages && movieObj.languages.length) {
+                let langName = movieObj.languages[0];
+                langName = langName.toUpperCase();
+                langName = langName.replace(" ", "_");
+                setMovieLanguage(langName);
+            }
+        }
+    };
+
+    const getPopupDetails = (): IMovie => {
         const movieObj: IMovie = {};
 
-        if (props.onSave) {
-            if (movieTitle) {
-                movieObj.title = movieTitle;
-            }
-            if (movieURL) {
-                movieObj.url = movieURL;
-            }
-
-            if (movieImageURL) {
-                movieObj.poster = movieImageURL;
-            }
-
-            if (movieDuration) {
-                movieObj.duration = movieDuration;
-            }
-            if (movieDate) {
-                movieObj.released = movieDate;
-            }
-            if (movieRating) {
-                movieObj.imdbRating = movieRating;
-            }
-
-            if (moviePlot) {
-                movieObj.plot = moviePlot;
-            }
-
-            if (movieCountry) {
-                movieObj.countries = [movieCountry]; //TODO later multi select dropdown in UI
-            }
-            if (movieLanguage) {
-                movieObj.languages = [movieLanguage]; //TODO later multi select dropdown in UI
-            }
-
-            props.onSave(movieObj);
-
+        if (movieId) {
+            movieObj.movieId = movieId;
         }
+
+        if (movieTitle) {
+            movieObj.title = movieTitle;
+        }
+        if (movieURL) {
+            movieObj.url = movieURL;
+        }
+
+        if (movieImageURL) {
+            movieObj.poster = movieImageURL;
+        }
+
+        if (movieDuration) {
+            movieObj.duration = movieDuration;
+        }
+        if (movieDate) {
+            movieObj.released = movieDate;
+        }
+        if (movieRating) {
+            movieObj.imdbRating = movieRating;
+        }
+
+        if (moviePlot) {
+            movieObj.plot = moviePlot;
+        }
+
+        if (movieCountry) {
+            movieObj.countries = [movieCountry]; //TODO later multi select dropdown in UI
+        }
+        if (movieLanguage) {
+            movieObj.languages = [movieLanguage]; //TODO later multi select dropdown in UI
+        }
+
+        return movieObj;
+    };
+
+    const evtClickSave = async (evt?: FormEvent) => {
+        const movieObj = getPopupDetails();
+
+        if (movieId) {
+            if (props.onUpdate) {
+                await props.onUpdate(movieObj);
+            }
+        }
+        else {
+            if (props.onInsert) {
+                await props.onInsert(movieObj);
+            }
+        }
+        evtClickTogglePopup(false);
 
         if (evt) {
             evt.preventDefault();
         }
     };
+
+    const onPageLoad = async () => {
+
+        if (props.isOpen) {
+            if (props.movieViewData) {
+                fillPopupDetails(props.movieViewData);
+            }
+            evtClickTogglePopup(true);
+        }
+        else {
+            evtClickTogglePopup(false);
+        }
+    }
+
+    useEffect(() => {
+        onPageLoad();
+    }, [props.isOpen]);
 
     return (
         <>
@@ -188,7 +282,7 @@ function MoviePopup(props: IMoviePopupProps) {
                                 </div>
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="number" className="movie-popup-input-group-input" tabIndex={109}
-                                        required min={0} max={10}
+                                        required min={0} max={10} step="0.1"
                                         value={movieRating} onChange={(evt) => { numberChangeHandler(setMovieRating, evt) }} />
                                     <div className="movie-popup-input-group-txt">Rating*</div>
                                 </div>

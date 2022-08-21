@@ -78,10 +78,20 @@ const getMoviesByBasicFilters = (_movieSearchObj: IBasicFormSearch): Promise<IMo
     return handlePostApi(url, body);
 };
 
-const insertMovie = (_movieObj: IMovie): Promise<string> => {
+const insertMovie = (_movieObj: IMovie): Promise<IMovie> => {
 
     const CLIENT_CONFIG = getClientConfig();
     const url = CLIENT_CONFIG.REACT_APP_API_URL + 'insertMovie';
+    const body = _movieObj;
+
+    //@ts-ignore
+    return handlePostApi(url, body);
+};
+
+const updateMovie = (_movieObj: IMovie): Promise<string> => {
+
+    const CLIENT_CONFIG = getClientConfig();
+    const url = CLIENT_CONFIG.REACT_APP_API_URL + 'updateMovie';
     const body = _movieObj;
 
     //@ts-ignore
@@ -92,5 +102,6 @@ export {
     getMoviesByText,
     getMastersByCategory,
     getMoviesByBasicFilters,
-    insertMovie
+    insertMovie,
+    updateMovie
 };
