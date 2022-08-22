@@ -70,7 +70,8 @@ function App() {
         const insertedMovieObj = await insertMovie(_movieObj);
         if (insertedMovieObj) {
           setMovieList([insertedMovieObj, ...movieList]);
-          ToastCls.success("Movie inserted !");
+          ToastCls.success(`Movie "${_movieObj.title}" inserted !`);
+          setIsPopupOpen(false);
         }
       }
 
@@ -85,16 +86,16 @@ function App() {
     setShowSpinner(true);
     try {
       if (_movieObj && _movieObj.movieId) {
-        const movieId = await updateMovie(_movieObj);
-        if (movieId) {
+        const updatedMovieObj = await updateMovie(_movieObj);
+        if (updatedMovieObj && updatedMovieObj.movieId) {
           let newMovieList = movieList.map((mov) => {
-            if (mov.movieId === movieId) {
-              mov = { ...mov, ..._movieObj };
+            if (mov.movieId === updatedMovieObj.movieId) {
+              mov = { ...mov, ...updatedMovieObj };
             }
             return mov;
           });
           setMovieList(newMovieList);
-          ToastCls.success("Movie updated !");
+          ToastCls.success(`Movie "${_movieObj.title}" updated !`);
 
         }
       }
@@ -105,12 +106,12 @@ function App() {
     }
     setShowSpinner(false);
   }
-  const onDelete = async (_movieId?: string) => {
+  const onDelete = async (_movieObj?: IMovie) => {
     setShowSpinner(true);
     try {
-      if (_movieId) {
+      if (_movieObj && _movieObj.movieId) {
         const movieId = await updateMovie({
-          movieId: _movieId,
+          movieId: _movieObj.movieId,
           statusCode: 0
         });
         if (movieId) {
@@ -118,7 +119,7 @@ function App() {
             return mov.movieId !== movieId;
           });
           setMovieList(newMovieList);
-          ToastCls.success("Movie deleted !");
+          ToastCls.success(`Movie "${_movieObj.title}" deleted !`);
         }
       }
 
@@ -167,9 +168,9 @@ function App() {
     setIsPopupOpen(true);
   }
   const evtClickDelete: deleteHandlerType = async (_movieObj) => {
-    const isYes = window.confirm(`Do you want to delete Movie "${_movieObj.title}"`);
+    const isYes = window.confirm(`Do you want to delete "${_movieObj.title}" Movie?`);
     if (isYes) {
-      onDelete(_movieObj.movieId);
+      onDelete(_movieObj);
     }
   }
 

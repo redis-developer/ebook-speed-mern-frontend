@@ -146,7 +146,7 @@ function SearchHeader(props: ISearchHeaderProps) {
                         {/* <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Duration" min={1} max={250} tabIndex={12}
                             value={basicSearchDuration} onChange={(evt) => { textChangeHandler(setBasicSearchDuration, evt) }} /> */}
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year"
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year>="
                             max={2100} tabIndex={13}
                             value={basicSearchYear} onChange={(evt) => { numberChangeHandler(setBasicSearchYear, evt) }} />
 
@@ -158,7 +158,7 @@ function SearchHeader(props: ISearchHeaderProps) {
                             })}
                         </select>
 
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating"
+                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating>="
                             min={0} max={10} tabIndex={15}
                             value={basicSearchRating} onChange={(evt) => { numberChangeHandler(setBasicSearchRating, evt) }} />
 

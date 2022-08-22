@@ -148,11 +148,15 @@ function MoviePopup(props: IMoviePopupProps) {
         if (movieDuration) {
             movieObj.duration = movieDuration;
         }
+
         if (movieDate) {
             movieObj.released = movieDate;
         }
         if (movieRating) {
             movieObj.imdbRating = movieRating;
+        }
+        else {
+            movieObj.imdbRating = 0;
         }
 
         if (moviePlot) {
@@ -170,6 +174,9 @@ function MoviePopup(props: IMoviePopupProps) {
     };
 
     const evtClickSave = async (evt?: FormEvent) => {
+        if (evt) {
+            evt.preventDefault();
+        }
         const movieObj = getPopupDetails();
 
         if (movieId) {
@@ -183,10 +190,6 @@ function MoviePopup(props: IMoviePopupProps) {
             }
         }
         evtClickTogglePopup(false);
-
-        if (evt) {
-            evt.preventDefault();
-        }
     };
 
     const onPageLoad = async () => {
@@ -225,13 +228,13 @@ function MoviePopup(props: IMoviePopupProps) {
                             </div>
                             <div className="movie-card-row movie-card-row-split">
                                 <div className="movie-popup-col movie-popup-input-group">
-                                    <input type="text" className="movie-popup-input-group-input" required tabIndex={102}
+                                    <input type="url" className="movie-popup-input-group-input" required tabIndex={102}
                                         value={movieURL} onChange={(evt) => { textChangeHandler(setMovieURL, evt) }} />
                                     <div className="movie-popup-input-group-txt">Movie (IMDB) URL*</div>
                                 </div>
 
                                 <div className="movie-popup-col movie-popup-input-group">
-                                    <input type="text" className="movie-popup-input-group-input" required tabIndex={103}
+                                    <input type="url" className="movie-popup-input-group-input" required tabIndex={103}
                                         value={movieImageURL} onChange={(evt) => { textChangeHandler(setMovieImageURL, evt) }} />
                                     <div className="movie-popup-input-group-txt">Poster (Image) URL*</div>
                                 </div>

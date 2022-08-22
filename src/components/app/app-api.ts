@@ -90,7 +90,7 @@ const insertMovie = (_movieObj: IMovie): Promise<IMovie> => {
     return handlePostApi(url, body);
 };
 
-const updateMovie = (_movieObj: IMovie): Promise<string> => {
+const updateMovie = (_movieObj: IMovie): Promise<IMovie> => {
 
     const CLIENT_CONFIG = getClientConfig();
     const url = CLIENT_CONFIG.REACT_APP_API_URL + 'updateMovie';
