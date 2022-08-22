@@ -1,14 +1,13 @@
-import type { IMasterCategory } from "../../models/master-category-mdl";
-
-
 import './movie-popup.css';
 
-import React, { FormEvent, useEffect, useState } from 'react';
+import type { IMasterCategory } from "../../models/master-category-mdl";
+import type { IMovie } from "../../models/movie-mdl";
 
+import React, { FormEvent, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faWindowClose } from '@fortawesome/free-solid-svg-icons';
-import { IMovie } from "../../models/movie-mdl";
 
+//#region types
 type saveHandlerType = (_movieObj?: IMovie) => Promise<void>;
 
 interface IMoviePopupProps {
@@ -21,8 +20,7 @@ interface IMoviePopupProps {
     isOpen?: boolean;
     setIsPopupOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-//TODO form labels on top by default (no on click animation)
+//#endregion
 
 function MoviePopup(props: IMoviePopupProps) {
 
@@ -39,31 +37,18 @@ function MoviePopup(props: IMoviePopupProps) {
     const [movieLanguage, setMovieLanguage] = useState("");
     const [moviePlot, setMoviePlot] = useState("");
 
-    const textChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<string>>,
+    //#region  events
+    const evtTextChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<string>>,
         evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         if (setterFn && evt) {
             setterFn(evt.target.value);
         }
     };
-    const numberChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<number>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const evtNumberChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<number>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         if (evt && evt.target.value) {
             setterFn(parseInt(evt.target.value));
         }
     };
-
-    const clearFormFields = () => {
-        setMovieId("");
-        setMovieTitle("");
-        setMovieURL("");
-        setMovieImageURL("");
-        setMovieDuration(0);
-        setMovieDate("");
-        setMovieRating(0);
-        setMovieCountry("");
-        setMovieLanguage("");
-        setMoviePlot("");
-    };
-
     const evtClickTogglePopup = (_show?: boolean) => {
         if (_show) {
             setShowClass("active");
@@ -75,6 +60,39 @@ function MoviePopup(props: IMoviePopupProps) {
                 props.setIsPopupOpen(false);
             }
         }
+    };
+    const evtClickSave = async (evt?: FormEvent) => {
+        if (evt) {
+            evt.preventDefault();
+        }
+        const movieObj = getPopupDetails();
+
+        if (movieId) {
+            if (props.onUpdate) {
+                await props.onUpdate(movieObj);
+            }
+        }
+        else {
+            if (props.onInsert) {
+                await props.onInsert(movieObj);
+            }
+        }
+        evtClickTogglePopup(false);
+    };
+    //#endregion
+
+    //#region methods
+    const clearFormFields = () => {
+        setMovieId("");
+        setMovieTitle("");
+        setMovieURL("");
+        setMovieImageURL("");
+        setMovieDuration(0);
+        setMovieDate("");
+        setMovieRating(0);
+        setMovieCountry("");
+        setMovieLanguage("");
+        setMoviePlot("");
     };
 
     const fillPopupDetails = (movieObj: IMovie) => {
@@ -173,25 +191,6 @@ function MoviePopup(props: IMoviePopupProps) {
         return movieObj;
     };
 
-    const evtClickSave = async (evt?: FormEvent) => {
-        if (evt) {
-            evt.preventDefault();
-        }
-        const movieObj = getPopupDetails();
-
-        if (movieId) {
-            if (props.onUpdate) {
-                await props.onUpdate(movieObj);
-            }
-        }
-        else {
-            if (props.onInsert) {
-                await props.onInsert(movieObj);
-            }
-        }
-        evtClickTogglePopup(false);
-    };
-
     const onPageLoad = async () => {
 
         if (props.isOpen) {
@@ -204,6 +203,7 @@ function MoviePopup(props: IMoviePopupProps) {
             evtClickTogglePopup(false);
         }
     }
+    //#endregion
 
     useEffect(() => {
         onPageLoad();
@@ -223,19 +223,19 @@ function MoviePopup(props: IMoviePopupProps) {
                         <div className="movie-popup-body">
                             <div className="movie-popup-input-group">
                                 <input type="text" className="movie-popup-input-group-input" required tabIndex={101}
-                                    value={movieTitle} onChange={(evt) => { textChangeHandler(setMovieTitle, evt) }} />
+                                    value={movieTitle} onChange={(evt) => { evtTextChangeHandler(setMovieTitle, evt) }} />
                                 <div className="movie-popup-input-group-txt">Title*</div>
                             </div>
                             <div className="movie-card-row movie-card-row-split">
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="url" className="movie-popup-input-group-input" required tabIndex={102}
-                                        value={movieURL} onChange={(evt) => { textChangeHandler(setMovieURL, evt) }} />
+                                        value={movieURL} onChange={(evt) => { evtTextChangeHandler(setMovieURL, evt) }} />
                                     <div className="movie-popup-input-group-txt">Movie (IMDB) URL*</div>
                                 </div>
 
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="url" className="movie-popup-input-group-input" required tabIndex={103}
-                                        value={movieImageURL} onChange={(evt) => { textChangeHandler(setMovieImageURL, evt) }} />
+                                        value={movieImageURL} onChange={(evt) => { evtTextChangeHandler(setMovieImageURL, evt) }} />
                                     <div className="movie-popup-input-group-txt">Poster (Image) URL*</div>
                                 </div>
 
@@ -244,7 +244,7 @@ function MoviePopup(props: IMoviePopupProps) {
                             <div className="movie-card-row movie-card-row-split">
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <select className="movie-popup-input-group-input" required tabIndex={104}
-                                        value={movieCountry} onChange={(evt) => { textChangeHandler(setMovieCountry, evt) }}>
+                                        value={movieCountry} onChange={(evt) => { evtTextChangeHandler(setMovieCountry, evt) }}>
                                         <option value="">Select</option>
                                         {props.masterCountries.map((country) => {
                                             return <option key={country.code} value={country.code}> {country.name}</option>;
@@ -254,7 +254,7 @@ function MoviePopup(props: IMoviePopupProps) {
                                 </div>
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <select className="movie-popup-input-group-input" required tabIndex={105}
-                                        value={movieLanguage} onChange={(evt) => { textChangeHandler(setMovieLanguage, evt) }}>
+                                        value={movieLanguage} onChange={(evt) => { evtTextChangeHandler(setMovieLanguage, evt) }}>
                                         <option value="">Select</option>
                                         {props.masterLanguages.map((Language) => {
                                             return <option key={Language.code} value={Language.code}> {Language.name}</option>;
@@ -266,7 +266,7 @@ function MoviePopup(props: IMoviePopupProps) {
 
                             <div className="movie-popup-input-group">
                                 <textarea className="movie-popup-input-group-input movie-popup-input-group-textarea" required tabIndex={106}
-                                    value={moviePlot} onChange={(evt) => { textChangeHandler(setMoviePlot, evt) }}>
+                                    value={moviePlot} onChange={(evt) => { evtTextChangeHandler(setMoviePlot, evt) }}>
                                 </textarea>
                                 <div className="movie-popup-input-group-txt">Plot*</div>
                             </div>
@@ -275,18 +275,18 @@ function MoviePopup(props: IMoviePopupProps) {
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="number" className="movie-popup-input-group-input" tabIndex={107}
                                         required min={1} max={250}
-                                        value={movieDuration} onChange={(evt) => { numberChangeHandler(setMovieDuration, evt) }} />
+                                        value={movieDuration} onChange={(evt) => { evtNumberChangeHandler(setMovieDuration, evt) }} />
                                     <div className="movie-popup-input-group-txt">Duration(minutes)*</div>
                                 </div>
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="date" className="movie-popup-input-group-input" required tabIndex={108}
-                                        value={movieDate} onChange={(evt) => { textChangeHandler(setMovieDate, evt) }} />
+                                        value={movieDate} onChange={(evt) => { evtTextChangeHandler(setMovieDate, evt) }} />
                                     <div className="movie-popup-input-group-txt">Released Date*</div>
                                 </div>
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="number" className="movie-popup-input-group-input" tabIndex={109}
                                         required min={0} max={10} step="0.1"
-                                        value={movieRating} onChange={(evt) => { numberChangeHandler(setMovieRating, evt) }} />
+                                        value={movieRating} onChange={(evt) => { evtNumberChangeHandler(setMovieRating, evt) }} />
                                     <div className="movie-popup-input-group-txt">Rating*</div>
                                 </div>
 

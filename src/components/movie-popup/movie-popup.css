@@ -60,10 +60,6 @@
     box-sizing: border-box;
 }
 
-/* .movie-popup-input-invalid {
-    border-bottom: 2px solid red;
-} */
-
 .movie-popup-input-group-textarea {
     resize: none;
 }
@@ -105,8 +101,6 @@
     margin: var(--cd-space-3) 0 0 var(--cd-space-2);
 }
 
-
-
 .movie-card-row-split {
     flex-wrap: wrap;
     justify-content: space-between;
@@ -135,8 +129,6 @@
     border: none;
 
 }
-
-
 
 .movie-card-add-edit-btn {
     display: flex;

@@ -3,6 +3,7 @@ import type { IMasterCategoryApiObject } from '../../models/misc';
 import type { IBasicFormSearch } from '../search-header/search-header';
 
 import axios from "axios";
+
 import { getClientConfig } from "../../config/client-config";
 import { ToastCls } from '../../utils/toast';
 
@@ -34,7 +35,6 @@ const handlePostApi = (_url: string, _body: unknown) => {
     return promObj;
 
 };
-
 
 const getMoviesByText = (_searchText?: string): Promise<IMovie[]> => {
 

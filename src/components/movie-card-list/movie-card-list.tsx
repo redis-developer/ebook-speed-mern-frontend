@@ -1,15 +1,19 @@
+import './movie-card-list.css';
+
 import type { IMovie } from '../../models/movie-mdl';
 import type { editHandlerType, deleteHandlerType } from '../movie-card/movie-card';
 
-import './movie-card-list.css'
 import React from 'react';
+
 import MovieCard from '../movie-card/movie-card';
 
+//#region  types
 interface IMovieCardProps {
     data: IMovie[];
     evtClickEdit?: editHandlerType;
     evtClickDelete?: deleteHandlerType;
 }
+//#endregion
 
 function MovieCardList(props: IMovieCardProps) {
     return (

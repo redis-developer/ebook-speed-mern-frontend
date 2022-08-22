@@ -1,11 +1,9 @@
 import { IMasterCategory } from './master-category-mdl';
 
-
 enum MASTER_CATEGORY_NAME {
     COUNTRY = "COUNTRY",
     LANGUAGE = "LANGUAGE"
 }
-
 
 interface IMasterCategoryApiObject {
     [k: string]: IMasterCategory[];
@@ -17,7 +15,5 @@ export {
 };
 
 export type {
-
     IMasterCategoryApiObject
-
 };

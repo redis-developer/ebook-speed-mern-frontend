@@ -1,11 +1,12 @@
-import type { IMovie } from '../../models/movie-mdl';
-
 import './movie-card.css';
+
+import type { IMovie } from '../../models/movie-mdl';
 
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faStar, faGlobe, faComment, faClock, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
+//#region types
 type editHandlerType = (_movieObj: IMovie) => void;
 type deleteHandlerType = (_movieId: IMovie) => void;
 
@@ -14,8 +15,9 @@ interface IMovieCardProps {
     evtClickEdit?: editHandlerType;
     evtClickDelete?: deleteHandlerType;
 }
+//#endregion
 
-//TODO: check browser console for frequent requests
+//TODO: check browser console requests
 function MovieCard(props: IMovieCardProps) {
     return (
         <div className="movie-card-container">
