@@ -7,10 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faStar, faGlobe, faComment, faClock, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
 type editHandlerType = (_movieObj: IMovie) => void;
+type deleteHandlerType = (_movieId: IMovie) => void;
 
 interface IMovieCardProps {
     data: IMovie;
-    evtClickEdit?: editHandlerType
+    evtClickEdit?: editHandlerType;
+    evtClickDelete?: deleteHandlerType;
 }
 
 //TODO: check browser console for frequent requests
@@ -32,7 +34,7 @@ function MovieCard(props: IMovieCardProps) {
                             <div className="movie-card-action-icon" title="Edit" onClick={() => { props.evtClickEdit && props.evtClickEdit(props.data) }}>
                                 <FontAwesomeIcon icon={faEdit} />
                             </div>
-                            <div className="movie-card-action-icon" title="Delete">
+                            <div className="movie-card-action-icon" title="Delete" onClick={() => { props.evtClickDelete && props.evtClickDelete(props.data) }}>
                                 <FontAwesomeIcon icon={faTrash} />
                             </div>
                         </div>
@@ -102,5 +104,6 @@ function MovieCard(props: IMovieCardProps) {
 export default MovieCard;
 
 export type {
-    editHandlerType
+    editHandlerType,
+    deleteHandlerType
 };

@@ -2,7 +2,7 @@ import type { IMovie } from '../../models/movie-mdl';
 import type { IMasterCategory } from '../../models/master-category-mdl';
 import type { searchHandlerType } from '../search-header/search-header';
 import type { saveHandlerType } from '../movie-popup/movie-popup';
-import type { editHandlerType } from '../movie-card/movie-card';
+import type { editHandlerType, deleteHandlerType } from '../movie-card/movie-card';
 
 
 import React, { useEffect, useState } from 'react';
@@ -98,12 +98,12 @@ function App() {
     }
     setShowSpinner(false);
   }
-  const onDelete: saveHandlerType = async (_movieObj) => {
+  const onDelete = async (_movieId?: string) => {
     setShowSpinner(true);
     try {
-      if (_movieObj && _movieObj.movieId) {
+      if (_movieId) {
         const movieId = await updateMovie({
-          movieId: _movieObj.movieId,
+          movieId: _movieId,
           status: 0
         });
         if (movieId) {
@@ -158,6 +158,12 @@ function App() {
     setMovieViewData(_movieObj);
     setIsPopupOpen(true);
   }
+  const evtClickDelete: deleteHandlerType = async (_movieObj) => {
+    const isYes = window.confirm(`Do you want to delete Movie ${_movieObj.title}`);
+    if (isYes) {
+      onDelete(_movieObj.movieId);
+    }
+  }
 
 
   useEffect(() => {
@@ -171,7 +177,7 @@ function App() {
       <SearchHeader masterCountries={masterCountries} masterLanguages={masterLanguages} onSearch={onSearch}></SearchHeader>
       {
         !showSpinner &&
-        <MovieCardList data={movieList} evtClickEdit={evtClickEdit}></MovieCardList>
+        <MovieCardList data={movieList} evtClickEdit={evtClickEdit} evtClickDelete={evtClickDelete}></MovieCardList>
       }
       <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages}
         onInsert={onInsert} onUpdate={onUpdate}
