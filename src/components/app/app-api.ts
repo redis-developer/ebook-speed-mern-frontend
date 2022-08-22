@@ -4,6 +4,7 @@ import type { IBasicFormSearch } from '../search-header/search-header';
 
 import axios from "axios";
 import { getClientConfig } from "../../config/client-config";
+import { ToastCls } from '../../utils/toast';
 
 const handlePostApi = (_url: string, _body: unknown) => {
     let promObj = new Promise((resolve, reject) => {
@@ -21,7 +22,8 @@ const handlePostApi = (_url: string, _body: unknown) => {
                     if (errorRes?.response?.data?.error) {
                         errorPayload = errorRes.response.data.error;
                     }
-                    console.log(errorPayload); //TODO:add user friendly alert
+                    console.log(errorPayload);
+                    ToastCls.error("Server error ! Check console for details.");
                     reject(errorPayload);
                 });
         }

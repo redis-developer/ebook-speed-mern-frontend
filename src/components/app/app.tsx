@@ -6,8 +6,12 @@ import type { editHandlerType, deleteHandlerType } from '../movie-card/movie-car
 
 
 import React, { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './app.css';
 
+import { ToastCls } from '../../utils/toast';
 import { MASTER_CATEGORY_NAME } from '../../models/misc';
 
 import MovieCardList from '../movie-card-list/movie-card-list';
@@ -66,12 +70,13 @@ function App() {
         const insertedMovieObj = await insertMovie(_movieObj);
         if (insertedMovieObj) {
           setMovieList([insertedMovieObj, ...movieList]);
+          ToastCls.success("Movie inserted !");
         }
       }
 
     }
     catch (err) {
-      console.log(err);//TODO user alert ?
+      console.log(err);
     }
     setShowSpinner(false);
   }
@@ -89,6 +94,8 @@ function App() {
             return mov;
           });
           setMovieList(newMovieList);
+          ToastCls.success("Movie updated !");
+
         }
       }
 
@@ -104,13 +111,14 @@ function App() {
       if (_movieId) {
         const movieId = await updateMovie({
           movieId: _movieId,
-          status: 0
+          statusCode: 0
         });
         if (movieId) {
           let newMovieList = movieList.filter((mov) => {
             return mov.movieId !== movieId;
           });
           setMovieList(newMovieList);
+          ToastCls.success("Movie deleted !");
         }
       }
 
@@ -159,7 +167,7 @@ function App() {
     setIsPopupOpen(true);
   }
   const evtClickDelete: deleteHandlerType = async (_movieObj) => {
-    const isYes = window.confirm(`Do you want to delete Movie ${_movieObj.title}`);
+    const isYes = window.confirm(`Do you want to delete Movie "${_movieObj.title}"`);
     if (isYes) {
       onDelete(_movieObj.movieId);
     }
@@ -184,6 +192,7 @@ function App() {
         movieViewData={movieViewData} isOpen={isPopupOpen} setIsPopupOpen={setIsPopupOpen}></MoviePopup>
 
       <Spinner show={showSpinner}></Spinner>
+      <ToastContainer />
     </div>
   );
 }

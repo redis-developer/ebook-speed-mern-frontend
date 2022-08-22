@@ -27,7 +27,7 @@ interface IMovie {
     budget?: IRangeNumber;
     revenue?: IRangeNumber;
 
-    status?: number;
+    statusCode?: number;
 
 }
 
