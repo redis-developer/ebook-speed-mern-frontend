@@ -65,26 +65,17 @@
 }
 
 .movie-popup-input-group-txt {
-    padding-left: var(--cd-space-2);
-    color: #a9a9a9;
+    color: var(--cd-clr-8);
+    font-size: var(--cd-font-2);
+    font-weight: 600;
+    transform: translateY(-100%);
     position: absolute;
     top: 0;
-    transition: .2s all;
-    pointer-events: none;
 }
 
 .movie-popup-input-group-input:focus,
 .movie-popup-input-group-input:valid {
     background-size: 100% 100%, 100% 100%;
-}
-
-.movie-popup-input-group-input:focus+.movie-popup-input-group-txt,
-.movie-popup-input-group-input:valid+.movie-popup-input-group-txt {
-    padding: 0;
-    color: var(--cd-clr-8);
-    font-size: var(--cd-font-2);
-    font-weight: 500px;
-    transform: translateY(-100%);
 }
 
 .movie-popup-col {

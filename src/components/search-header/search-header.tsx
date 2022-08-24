@@ -134,24 +134,36 @@ function SearchHeader(props: ISearchHeaderProps) {
                         </div>
                     </div>
                     <div className="movie-basic-search-container">
-                        <input type="text" className="movie-basic-search-input movie-basic-search-title-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput"
+                        <div className="movie-basic-search-input-container movie-basic-search-title-input">
+                            <div className="movie-search-lbl">Title</div>
+                            <input type="text" className="movie-basic-search-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput"
                             value={basicSearchTitle} onChange={(evt) => { evtTextChangeHandler(setBasicSearchTitle, evt) }} />
-
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Year>="
+                        </div>
+                        
+                        <div className="movie-basic-search-input-container movie-basic-search-short-input">
+                            <div className="movie-search-lbl">Year</div>
+                            <input type="number" className="movie-basic-search-input" placeholder="Year>="
                             max={2100} tabIndex={13}
                             value={basicSearchYear} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchYear, evt) }} />
+                        </div>
+                        
+                        <div className="movie-basic-search-input-container movie-basic-search-input-select">
+                            <div className="movie-search-lbl">Country</div>
+                            <select className="movie-basic-search-input" tabIndex={14}
+                                value={basicSearchCountry} onChange={(evt) => { evtTextChangeHandler(setBasicSearchCountry, evt) }} >
+                                <option value="">Select Country</option>
+                                {props.masterCountries.map((country) => {
+                                    return <option key={country.code} value={country.code}> {country.name}</option>;
+                                })}
+                            </select>
+                        </div>
+                        <div className="movie-basic-search-input-container movie-basic-search-short-input">
+                            <div className="movie-search-lbl">Rating</div>
+                            <input type="number" className="movie-basic-search-input" placeholder="Rating>="
+                                min={0} max={10} tabIndex={15}
+                                value={basicSearchRating} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchRating, evt) }} />
 
-                        <select className="movie-basic-search-input" tabIndex={14}
-                            value={basicSearchCountry} onChange={(evt) => { evtTextChangeHandler(setBasicSearchCountry, evt) }} >
-                            <option value="">Select Country</option>
-                            {props.masterCountries.map((country) => {
-                                return <option key={country.code} value={country.code}> {country.name}</option>;
-                            })}
-                        </select>
-
-                        <input type="number" className="movie-basic-search-input movie-basic-search-short-input" placeholder="Rating>="
-                            min={0} max={10} tabIndex={15}
-                            value={basicSearchRating} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchRating, evt) }} />
+                            </div>
                     </div>
                     <input type="submit" className="movie-search-btn" tabIndex={20} value="SEARCH" id="btnSearch" />
                     <input type="button" className="movie-basic-search-last-lbl" onClick={() => { evtClickToggleSearchSection(true) }} tabIndex={21} value="Basic search" />
