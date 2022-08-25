@@ -157,7 +157,15 @@ function App() {
           setMovieList([]);
         }
       })
-      const mastersPromObj = getMastersByCategory([MASTER_CATEGORY_NAME.COUNTRY, MASTER_CATEGORY_NAME.LANGUAGE]);
+
+      const categories = [
+        MASTER_CATEGORY_NAME.COUNTRY,
+        MASTER_CATEGORY_NAME.LANGUAGE
+      ];
+      //from database
+      const mastersPromObj = getMastersByCategory(categories, false);
+      //from redis
+      //const mastersPromObj = getMastersByCategory(categories, true);
       const mastersPromObj2 = mastersPromObj.then((data) => {
         if (data) {
           if (data[MASTER_CATEGORY_NAME.COUNTRY]) {
