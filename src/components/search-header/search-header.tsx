@@ -79,6 +79,17 @@ function SearchHeader(props: ISearchHeaderProps) {
 
     }
 
+    const evtClickClearSearch = (evt?: FormEvent) => {
+        clearSearchFields();
+
+        if (props.onSearch) {
+            props.onSearch(true, "", {});//default load
+        }
+
+        if (evt) {
+            evt.preventDefault();
+        }
+    }
     const evtClickSearch = (evt?: FormEvent) => {
         if (props.onSearch) {
             let isTextSearch = !(!!basicSearchClass);
@@ -137,16 +148,16 @@ function SearchHeader(props: ISearchHeaderProps) {
                         <div className="movie-basic-search-input-container movie-basic-search-title-input">
                             <div className="movie-search-lbl">Title</div>
                             <input type="text" className="movie-basic-search-input" placeholder="Title" tabIndex={11} id="basicSearchTitleInput"
-                            value={basicSearchTitle} onChange={(evt) => { evtTextChangeHandler(setBasicSearchTitle, evt) }} />
+                                value={basicSearchTitle} onChange={(evt) => { evtTextChangeHandler(setBasicSearchTitle, evt) }} />
                         </div>
-                        
+
                         <div className="movie-basic-search-input-container movie-basic-search-short-input">
-                            <div className="movie-search-lbl">Year</div>
+                            <div className="movie-search-lbl">Year &gt;=</div>
                             <input type="number" className="movie-basic-search-input" placeholder="Year>="
-                            max={2100} tabIndex={13}
-                            value={basicSearchYear} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchYear, evt) }} />
+                                max={2100} tabIndex={13}
+                                value={basicSearchYear} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchYear, evt) }} />
                         </div>
-                        
+
                         <div className="movie-basic-search-input-container movie-basic-search-input-select">
                             <div className="movie-search-lbl">Country</div>
                             <select className="movie-basic-search-input" tabIndex={14}
@@ -158,16 +169,17 @@ function SearchHeader(props: ISearchHeaderProps) {
                             </select>
                         </div>
                         <div className="movie-basic-search-input-container movie-basic-search-short-input">
-                            <div className="movie-search-lbl">Rating</div>
+                            <div className="movie-search-lbl">Rating &gt;= </div>
                             <input type="number" className="movie-basic-search-input" placeholder="Rating>="
                                 min={0} max={10} tabIndex={15}
                                 value={basicSearchRating} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchRating, evt) }} />
 
-                            </div>
+                        </div>
                     </div>
                     <input type="submit" className="movie-search-btn" tabIndex={20} value="SEARCH" id="btnSearch" />
-                    <input type="button" className="movie-basic-search-last-lbl" onClick={() => { evtClickToggleSearchSection(true) }} tabIndex={21} value="Basic search" />
-                    <input type="button" className="movie-text-search-lbl" onClick={() => { evtClickToggleSearchSection() }} tabIndex={21} value="Text search" />
+                    <input type="button" className="movie-search-btn movie-clear-search-btn" tabIndex={21} value="CLEAR" onClick={() => { evtClickClearSearch() }} />
+                    <input type="button" className="movie-basic-search-last-lbl" onClick={() => { evtClickToggleSearchSection(true) }} tabIndex={22} value="Basic search" />
+                    <input type="button" className="movie-text-search-lbl" onClick={() => { evtClickToggleSearchSection() }} tabIndex={22} value="Text search" />
                 </div>
 
             </div>

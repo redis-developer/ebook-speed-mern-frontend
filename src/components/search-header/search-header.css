@@ -47,7 +47,7 @@
 }
 
 .movie-search-lbl {
-    font-size: var(--cd-font-2);
+    font-size: var(--cd-font-1);
 }
 
 .movie-basic-search-input {
@@ -58,7 +58,7 @@
     border: 1px solid var(--cd-clr-9-txt);
     border-radius: 3px;
     box-sizing: border-box;
-    height: 24px;
+    height: 20px;
 }
 
 .movie-search-btn {
@@ -70,6 +70,10 @@
     font-size: var(--cd-font-3);
     cursor: pointer;
     border: none;
+}
+
+.movie-clear-search-btn {
+    margin-top: 0;
 }
 
 .movie-text-search-lbl,
@@ -182,7 +186,9 @@
     .movie-basic-search-input-select {
         max-width: 150px;
     }
-
+    .movie-clear-search-btn {
+        margin: 0;
+    }
 }
 
 @media (min-width:1200px) {
