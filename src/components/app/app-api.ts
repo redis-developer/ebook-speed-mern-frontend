@@ -8,14 +8,27 @@ import { getClientConfig } from "../../config/client-config";
 import { ToastCls } from '../../utils/toast';
 import { MASTER_CATEGORY_NAME } from '../../models/misc';
 
-const handlePostApi = (_url: string, _body: unknown) => {
+interface IMoviesWithCacheRes {
+    data: IMovie[],
+    isFromCache: boolean
+}
+
+const handlePostApi = (_url: string, _body: unknown, _checkCache?: boolean) => {
     let promObj = new Promise((resolve, reject) => {
         if (_url && _body) {
             axios.post(_url, _body)
                 .then((response) => {
                     let result = null;
                     if (response?.data?.data) {
-                        result = response.data.data;
+                        if (_checkCache) {
+                            result = {
+                                data: response.data.data,
+                                isFromCache: response.data.isFromCache
+                            }
+                        }
+                        else {
+                            result = response.data.data;
+                        }
                     }
                     resolve(result);
                 })
@@ -37,7 +50,7 @@ const handlePostApi = (_url: string, _body: unknown) => {
 
 };
 
-const getMoviesByText = (_searchText?: string): Promise<IMovie[]> => {
+const getMoviesByText = (_searchText?: string): Promise<IMoviesWithCacheRes> => {
 
     if (!_searchText) {
         _searchText = "";
@@ -50,7 +63,7 @@ const getMoviesByText = (_searchText?: string): Promise<IMovie[]> => {
     };
 
     //@ts-ignore
-    return handlePostApi(url, body);
+    return handlePostApi(url, body, true);
 };
 
 const getMastersByCategory = (_categories: string[], isRedis: boolean): Promise<IMasterCategoryApiObject> => {
@@ -89,14 +102,14 @@ const getMastersByCategory = (_categories: string[], isRedis: boolean): Promise<
     return promObj;
 }
 
-const getMoviesByBasicFilters = (_movieSearchObj: IBasicFormSearch): Promise<IMovie[]> => {
+const getMoviesByBasicFilters = (_movieSearchObj: IBasicFormSearch): Promise<IMoviesWithCacheRes> => {
 
     const CLIENT_CONFIG = getClientConfig();
     const url = CLIENT_CONFIG.REACT_APP_API_URL + 'getMoviesByBasicFilters';
     const body = _movieSearchObj;
 
     //@ts-ignore
-    return handlePostApi(url, body);
+    return handlePostApi(url, body, true);
 };
 
 const insertMovie = (_movieObj: IMovie): Promise<IMovie> => {

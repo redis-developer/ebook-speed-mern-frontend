@@ -30,6 +30,7 @@ function App() {
 
   const [movieList, setMovieList] = useState<IMovie[]>([]);
   const [isSearchData, setIsSearchData] = useState(false);
+  const [isSearchFromCache, setIsSearchFromCache] = useState(false);
   const [masterCountries, setMasterCountries] = useState<IMasterCategory[]>([]);
   const [masterLanguages, setMasterLanguages] = useState<IMasterCategory[]>([]);
 
@@ -39,21 +40,26 @@ function App() {
     setShowSpinner(true);
 
     try {
-      let dataArr: IMovie[] = [];
+      let result = null;
       if (_isTextSearch) {
-        dataArr = await getMoviesByText(_searchText);
+        result = await getMoviesByText(_searchText);
       }
       else if (_movieSearchObj) {
-        dataArr = await getMoviesByBasicFilters(_movieSearchObj);
+        result = await getMoviesByBasicFilters(_movieSearchObj);
       }
 
       setIsSearchData(true);
 
-      if (dataArr && dataArr.length) {
-        setMovieList(dataArr);
-      }
-      else {
-        setMovieList([]);
+      if (result) {
+        setIsSearchFromCache(result.isFromCache);
+
+        const dataArr = result.data;
+        if (dataArr && dataArr.length) {
+          setMovieList(dataArr);
+        }
+        else {
+          setMovieList([]);
+        }
       }
 
     }
@@ -64,10 +70,6 @@ function App() {
     setShowSpinner(false);
 
   }
-
-  // const onClearSearch = ()=>{
-  //   setIsSearchData(false);
-  // }
 
   const onInsert: saveHandlerType = async (_movieObj) => {
     setShowSpinner(true);
@@ -148,14 +150,19 @@ function App() {
 
     try {
       const moviesPromObj = getMoviesByText('');//load all movies
-      const moviesPromObj2 = moviesPromObj.then((dataArr) => {
+      const moviesPromObj2 = moviesPromObj.then((result) => {
         setIsSearchData(false);
-        if (dataArr && dataArr.length) {
-          setMovieList(dataArr);
+        if (result) {
+          setIsSearchFromCache(result.isFromCache);
+          const dataArr = result.data;
+          if (dataArr && dataArr.length) {
+            setMovieList(dataArr);
+          }
+          else {
+            setMovieList([]);
+          }
         }
-        else {
-          setMovieList([]);
-        }
+
       })
 
       const categories = [
@@ -163,9 +170,9 @@ function App() {
         MASTER_CATEGORY_NAME.LANGUAGE
       ];
       //from database
-      const mastersPromObj = getMastersByCategory(categories, false);
+      //const mastersPromObj = getMastersByCategory(categories, false);
       //from redis
-      //const mastersPromObj = getMastersByCategory(categories, true);
+      const mastersPromObj = getMastersByCategory(categories, true);
       const mastersPromObj2 = mastersPromObj.then((data) => {
         if (data) {
           if (data[MASTER_CATEGORY_NAME.COUNTRY]) {
@@ -207,7 +214,8 @@ function App() {
       <SearchHeader masterCountries={masterCountries} masterLanguages={masterLanguages} onSearch={onSearch}></SearchHeader>
       {
         !showSpinner &&
-        <MovieCardList data={movieList} evtClickEdit={clickEditCallback} evtClickDelete={clickDeleteCallback}></MovieCardList>
+        <MovieCardList data={movieList} isDataFromCache={isSearchFromCache}
+          evtClickEdit={clickEditCallback} evtClickDelete={clickDeleteCallback}></MovieCardList>
       }
       <MoviePopup masterCountries={masterCountries} masterLanguages={masterLanguages}
         onInsert={onInsert} onUpdate={onUpdate}

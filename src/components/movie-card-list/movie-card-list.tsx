@@ -12,6 +12,7 @@ interface IMovieCardProps {
     data: IMovie[];
     evtClickEdit?: editHandlerType;
     evtClickDelete?: deleteHandlerType;
+    isDataFromCache: boolean;
 }
 //#endregion
 
@@ -21,7 +22,8 @@ function MovieCardList(props: IMovieCardProps) {
             {
                 props.data.length > 0 &&
                 <div className='movie-card-list-label'>
-                    {props.data.length} Movie{props.data.length > 1 ? 's' : ''} found !
+                    {props.data.length} Movie{props.data.length > 1 ? 's' : ''} found
+                    {props.isDataFromCache ? '(From cache)' : ''}!
                 </div>
             }
             {
