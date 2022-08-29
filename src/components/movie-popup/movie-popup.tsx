@@ -49,6 +49,12 @@ function MoviePopup(props: IMoviePopupProps) {
             setterFn(parseInt(evt.target.value));
         }
     };
+
+    const evtDecimalChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<number>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        if (evt && evt.target.value) {
+            setterFn(parseFloat(evt.target.value));
+        }
+    };
     const evtClickTogglePopup = (_show?: boolean) => {
         if (_show) {
             setShowClass("active");
@@ -285,8 +291,8 @@ function MoviePopup(props: IMoviePopupProps) {
                                 </div>
                                 <div className="movie-popup-col movie-popup-input-group">
                                     <input type="number" className="movie-popup-input-group-input" tabIndex={109}
-                                        required min={0} max={10} step="0.1"
-                                        value={movieRating} onChange={(evt) => { evtNumberChangeHandler(setMovieRating, evt) }} />
+                                        required min={0} max={10} step={0.1}
+                                        value={movieRating} onChange={(evt) => { evtDecimalChangeHandler(setMovieRating, evt) }} />
                                     <div className="movie-popup-input-group-txt">Rating*</div>
                                 </div>
 

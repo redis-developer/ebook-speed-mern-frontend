@@ -58,6 +58,12 @@ function SearchHeader(props: ISearchHeaderProps) {
         }
     };
 
+    const evtDecimalChangeHandler = (setterFn: React.Dispatch<React.SetStateAction<number>>, evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        if (evt && evt.target.value) {
+            setterFn(parseFloat(evt.target.value));
+        }
+    };
+
     const evtClickToggleSearchSection = (_basicShow?: boolean) => {
         clearSearchFields();
 
@@ -171,8 +177,8 @@ function SearchHeader(props: ISearchHeaderProps) {
                         <div className="movie-basic-search-input-container movie-basic-search-short-input">
                             <div className="movie-search-lbl">Rating &gt;= </div>
                             <input type="number" className="movie-basic-search-input" placeholder="Rating>="
-                                min={0} max={10} tabIndex={15}
-                                value={basicSearchRating} onChange={(evt) => { evtNumberChangeHandler(setBasicSearchRating, evt) }} />
+                                min={0} max={10} step={0.1} tabIndex={15}
+                                value={basicSearchRating} onChange={(evt) => { evtDecimalChangeHandler(setBasicSearchRating, evt) }} />
 
                         </div>
                     </div>
