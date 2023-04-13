@@ -2,25 +2,34 @@
 
 Speed your MERN app by REDIS
 
-## Project setup
+## Manage application
 
-### (1) Config (optional)
-
-Please create **.env file** at root and add appropriate "API_URL"
-
-```js
-//consider sample
-REACT_APP_API_URL=http://localhost:3001/api/
-```
-
-### (2) Install packages
+### Start application
 
 ```sh
-npm install
+# to start docker app
+docker compose up -d
 ```
 
-### (3) Run project locally
+Note:
+
+- **Open browser at http://localhost:3000 to view application**
+- Can change API connection details or ports by the environment variables in .env file
+
+### Other commands
 
 ```sh
-npm start
+# to stop docker app
+docker compose down
+
+# to stop & also delete volumes (mongodb & redis data)
+docker compose down -v
+
+# to rebuild all images & start
+docker compose  up -d --build
+
+# to rebuild image of specific service (after any code changes)
+docker-compose build --no-cache <service_name>
+# example
+docker-compose build --no-cache movie_frontend_service
 ```
